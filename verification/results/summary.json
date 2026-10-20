@@ -1,0 +1,21 @@
+{
+  "forge-1.20.1": {
+    "without-jade": 62,
+    "with-jade": 64,
+    "ui": true
+  },
+  "neoforge-1.21.1": {
+    "without-jade": 62,
+    "with-jade": 64,
+    "ui": true
+  },
+  "neoforge-26.1.2": {
+    "without-jade": 57,
+    "with-jade": 59,
+    "ui": true
+  },
+  "core": {
+    "passed": true,
+    "checks": 15018
+  }
+}

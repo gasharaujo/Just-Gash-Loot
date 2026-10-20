@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "justgashloot:item/quantity_upgrade_5"
+  }
+}

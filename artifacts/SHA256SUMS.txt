@@ -1,0 +1,3 @@
+cef6e240320ff3a680ea8cdea7bde96bf75638463e3c0e6f47ff7e74a0cd9069  justgashloot-forge-1.20.1-0.1.0.jar
+88a4f3b3d6d76ede53e5c57cd470704d4247eee0177d0e15382acd81deeb0790  justgashloot-neoforge-1.21.1-0.1.0.jar
+5961cc67915fd19ded792148d680e99dbe651d4fe94369d09e237d097e6db998  justgashloot-neoforge-26.1.2-0.1.0.jar

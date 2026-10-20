@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "justgashloot:block/loot_generator"
+    }
+  }
+}
