@@ -35,10 +35,12 @@ tasks.withType(Jar).configureEach {
     reproducibleFileOrder = true
     from('../LICENSE')
     exclude('**/Verification*.class')
+    exclude('data/justgashloot/**/verification/**')
 }
 if (project.hasProperty('verification')) {
     sourceSets.main.java.srcDir('../verification/src/main/java')
     sourceSets.main.java.srcDir('src/verification/java')
+    sourceSets.main.resources.srcDir('src/verification/resources')
 }
 
 tasks.named('processResources').configure { inputs.property('verification', project.hasProperty('verification')) }
@@ -57,7 +59,7 @@ repositories { maven { url = 'https://www.cursemaven.com'; content { includeGrou
 dependencies { compileOnly fg.deobf('curse.maven:jade-324717:8479276') }
 if (project.hasProperty('jadeRuntime')) { dependencies { runtimeOnly fg.deobf('curse.maven:jade-324717:8479276') } }
 // Third-party refmaps use SRG names; the development client uses Mojang names.
-if (project.hasProperty('jadeRuntime')) {
+if (project.hasProperty('jadeRuntime') || project.hasProperty('lootrRuntime')) {
     def refmapFile = layout.buildDirectory.file('jade-refmap/srg-to-mojang.srg')
     def refmapTask = tasks.register('prepareJadeRefmap') {
         dependsOn 'createMcpToSrg'
@@ -93,3 +95,8 @@ if (project.hasProperty('verification')) {
         }
     }
 }
+
+minecraft.runs.configureEach { property 'justgashloot.expectLibrary', project.hasProperty('expectLibrary') ? 'true' : 'false' }
+
+repositories { maven { url = 'https://api.modrinth.com/maven'; content { includeGroup 'maven.modrinth' } } }
+if (project.hasProperty('lootrRuntime')) { dependencies { runtimeOnly fg.deobf('maven.modrinth:lootr:mWTXC1ZX') } }

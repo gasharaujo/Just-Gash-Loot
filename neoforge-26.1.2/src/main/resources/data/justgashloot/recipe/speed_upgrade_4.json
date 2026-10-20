@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "nMn",
+    "MUM",
+    "nMn"
+  ],
+  "key": {
+    "n": "minecraft:clock",
+    "M": "minecraft:emerald_block",
+    "U": "justgashloot:speed_upgrade_3"
+  },
+  "result": {
+    "id": "justgashloot:speed_upgrade_4",
+    "count": 1
+  }
+}

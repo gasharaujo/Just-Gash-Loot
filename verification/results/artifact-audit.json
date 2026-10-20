@@ -1,0 +1,39 @@
+{
+  "modVersion": "2.0.0",
+  "passed": true,
+  "artifacts": [
+    {
+      "filename": "justgashloot-forge-1.20.1-2.0.0.jar",
+      "sha256": "33ea21b1df4575c15d098f29250af8c8bd9ec38c58c27efbdc2e03228be7b926",
+      "installedInstance": "20.1",
+      "classMajor": 61,
+      "recipes": 24,
+      "recipeAdvancements": 24,
+      "textures": 25,
+      "verificationHarnessExcluded": true,
+      "optionalModsNotBundled": true
+    },
+    {
+      "filename": "justgashloot-neoforge-1.21.1-2.0.0.jar",
+      "sha256": "1a2ca0dd1ffa99d53c0920dbd3c076c3df80e96300c3de884666d3375898d036",
+      "installedInstance": "21",
+      "classMajor": 65,
+      "recipes": 24,
+      "recipeAdvancements": 24,
+      "textures": 25,
+      "verificationHarnessExcluded": true,
+      "optionalModsNotBundled": true
+    },
+    {
+      "filename": "justgashloot-neoforge-26.1.2-2.0.0.jar",
+      "sha256": "94d9650aa801cb35d27098d346a598198c82f13ae55f9153e8728cb7ce16db8d",
+      "installedInstance": "26.1.2",
+      "classMajor": 69,
+      "recipes": 24,
+      "recipeAdvancements": 24,
+      "textures": 25,
+      "verificationHarnessExcluded": true,
+      "optionalModsNotBundled": true
+    }
+  ]
+}

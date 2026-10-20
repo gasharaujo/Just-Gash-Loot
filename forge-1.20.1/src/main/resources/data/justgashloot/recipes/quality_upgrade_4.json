@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "nMn",
+    "MUM",
+    "nMn"
+  ],
+  "key": {
+    "n": {
+      "type": "justgashloot:exact_enchantment",
+      "enchantment": "minecraft:looting"
+    },
+    "M": {
+      "item": "minecraft:emerald_block"
+    },
+    "U": {
+      "item": "justgashloot:quality_upgrade_3"
+    }
+  },
+  "result": {
+    "item": "justgashloot:quality_upgrade_4",
+    "count": 1
+  }
+}

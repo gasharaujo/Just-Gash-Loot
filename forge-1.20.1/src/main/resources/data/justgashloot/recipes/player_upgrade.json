@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "nMn",
+    "MUM",
+    "nMn"
+  ],
+  "key": {
+    "n": {
+      "item": "minecraft:nether_star"
+    },
+    "M": {
+      "item": "minecraft:iron_block"
+    },
+    "U": {
+      "item": "justgashloot:upgrade_base"
+    }
+  },
+  "result": {
+    "item": "justgashloot:player_upgrade",
+    "count": 1
+  }
+}

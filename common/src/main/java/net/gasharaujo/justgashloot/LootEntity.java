@@ -19,13 +19,24 @@ public final class LootEntity extends VersionedEntity implements MenuProvider {
     public final SimpleContainer upgrades = new SimpleContainer(5) {
         @Override public boolean canPlaceItem(int index, ItemStack stack) { return canInstall(index, stack); }
         @Override public void setItem(int index, ItemStack stack) {
-            if (stack.isEmpty() || canInstall(index, stack)) super.setItem(index, stack.isEmpty() ? ItemStack.EMPTY : stack.copyWithCount(1));
+            if (stack.isEmpty() || canInstall(index, stack)) {
+                if (index == 4) playerSlotRevision++;
+                super.setItem(index, stack.isEmpty() ? ItemStack.EMPTY : stack.copyWithCount(1));
+            }
         }
-        @Override public void setChanged() { super.setChanged(); LootEntity.this.setChanged(); }
+        @Override public void setChanged() {
+            super.setChanged();
+            if (getItem(4).isEmpty() && memory != null && memory.owner != null) clearOwner();
+            LootEntity.this.setChanged();
+        }
         @Override public int getMaxStackSize() { return 1; }
     };
     int lava, energy;
     long revision;
+    long playerSlotRevision;
+    MachineMemory memory = new MachineMemory();
+    private transient Object failedTable;
+    private transient net.minecraft.server.level.ServerPlayer simulatedPlayer;
     private boolean contentsDropped;
     private UUID warnedPlayer;
     private long warningTick = Long.MIN_VALUE;
@@ -37,7 +48,7 @@ public final class LootEntity extends VersionedEntity implements MenuProvider {
         ItemStack type = outputs.type(slot);
         return type == null ? ItemStack.EMPTY : type.copyWithCount(1);
     }
-    /** Server-only insertion point for the future loot generator. Returns leftover count. */
+    /** Server-only insertion point. Returns leftover count without overflowing. */
     public long addGeneratedLoot(ItemStack template, long amount) {
         if (level != null && Platform.clientSide(level)) throw new IllegalStateException("Server only");
         if (amount < 0) throw new IllegalArgumentException("Negative amount");
@@ -54,6 +65,64 @@ public final class LootEntity extends VersionedEntity implements MenuProvider {
         ItemStack result = template.copyWithCount(amount);
         if (!simulate && amount > 0) { outputs.extract(slot, amount); setChanged(); }
         return result;
+    }
+    public String tableId() { return memory.table; }
+    public String ownerName() { return memory.owner == null ? "" : memory.ownerName; }
+    public void setTable(String id) {
+        if (!LootRuntime.validId(id)) throw new IllegalArgumentException("Invalid loot table ID");
+        if (!id.equals(memory.table) || failedTable != null) {
+            memory.table = id; memory.cycle.reset(); failedTable = null; setChanged();
+        }
+    }
+    void bindInstaller(Player player, long previousSlotRevision) {
+        if (playerSlotRevision != previousSlotRevision && !upgrades.getItem(4).isEmpty()) {
+            if (!player.getUUID().equals(memory.owner)) { memory.cycle.reset(); simulatedPlayer = null; }
+            memory.owner = player.getUUID(); memory.ownerName = LootRuntime.playerName(player);
+            setChanged();
+        }
+        if (upgrades.getItem(4).isEmpty() && memory.owner != null) clearOwner();
+    }
+    private void clearOwner() {
+        memory.owner = null; memory.ownerName = ""; memory.cycle.reset(); simulatedPlayer = null; setChanged();
+    }
+    GenerationCycle.Settings settings() {
+        int[] tiers = new int[4];
+        for (int i = 0; i < 4; i++) if (upgrades.getItem(i).getItem() instanceof UpgradeItem item) tiers[item.category.ordinal()] = item.tier;
+        return new GenerationCycle.Settings(tiers[0], tiers[1], tiers[2], tiers[3]);
+    }
+    net.minecraft.server.level.ServerPlayer playerContext(net.minecraft.server.level.ServerLevel server) {
+        if (upgrades.getItem(4).isEmpty() || memory.owner == null) return null;
+        var online = server.getServer().getPlayerList().getPlayer(memory.owner);
+        if (online != null) return online;
+        if (simulatedPlayer == null) simulatedPlayer = LootRuntime.simulate(server, memory.owner, memory.ownerName);
+        simulatedPlayer.setPos(worldPosition.getX() + .5, worldPosition.getY() + .5, worldPosition.getZ() + .5);
+        return simulatedPlayer;
+    }
+    public void serverTick() {
+        if (!(level instanceof net.minecraft.server.level.ServerLevel server) || memory.table.isEmpty()) return;
+        var table = LootRuntime.resolve(server, memory.table);
+        if (table == null || table == failedTable) return;
+        boolean playerUpgrade = !upgrades.getItem(4).isEmpty();
+        if (playerUpgrade && memory.owner == null) return;
+        try {
+            boolean completed = memory.cycle.tick(settings(), new GenerationCycle.Fuel() {
+                public boolean takeEnergy(int amount) { if (energy < amount) return false; energy -= amount; return true; }
+                public boolean takeLava(int amount) { if (lava < amount) return false; lava -= amount; return true; }
+            });
+            // Persist the clock without invalidating the inventory's network revision.
+            super.setChanged();
+            if (!completed) return;
+            var config = memory.cycle.settings;
+            net.minecraft.server.level.ServerPlayer context = playerContext(server);
+            List<ItemStack> results = new ArrayList<>();
+            for (int i = 0; i < GenerationCycle.ROLLS[config.quantity()]; i++)
+                results.addAll(LootRuntime.roll(server, worldPosition, table, context, GenerationCycle.LUCK[config.quality()]));
+            for (ItemStack stack : results) if (!stack.isEmpty()) addGeneratedLoot(stack, stack.getCount());
+            memory.cycle.next(settings());
+        } catch (RuntimeException error) {
+            failedTable = table; memory.cycle.reset(); super.setChanged();
+            com.mojang.logging.LogUtils.getLogger().error("Loot Generator at {} paused while rolling {}", worldPosition, memory.table, error);
+        }
     }
     public boolean canInstall(int slot, ItemStack stack) {
         if (slot < 0 || slot >= 5) return false;

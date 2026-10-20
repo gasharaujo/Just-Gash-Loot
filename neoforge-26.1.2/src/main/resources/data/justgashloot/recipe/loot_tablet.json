@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "nnn",
+    "cac",
+    "nnn"
+  ],
+  "key": {
+    "n": "minecraft:iron_nugget",
+    "c": "minecraft:cyan_stained_glass_pane",
+    "a": "minecraft:light_blue_stained_glass_pane"
+  },
+  "result": {
+    "id": "justgashloot:loot_tablet",
+    "count": 1
+  }
+}

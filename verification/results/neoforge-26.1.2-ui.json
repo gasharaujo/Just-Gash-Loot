@@ -1,5 +1,11 @@
 {
   "passed": true,
   "rightClickPacket": true,
-  "leftClickPacket": true
+  "leftClickPacket": true,
+  "tabletCapturePacket": true,
+  "tabletShiftRightClick": true,
+  "tabletPagination": true,
+  "tabletSearch": true,
+  "tabletSelection": true,
+  "serverTabletConfiguration": true
 }

@@ -8,7 +8,7 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="${mod_authors}"
 displayURL="https://github.com/gasharaujo/Just-Gash-Loot"
-description='''Loot Generator with bulk output storage and five upgrade slots. Initial structure; loot generation is not yet enabled.'''
+description='''Capture loot tables with the Loot Tablet and generate their items using FE or lava. Bulk storage, five upgrade slots and optional Jade/Lootr integration.'''
 [[dependencies.${mod_id}]]
 modId="forge"
 mandatory=true

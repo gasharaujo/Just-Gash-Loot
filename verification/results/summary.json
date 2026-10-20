@@ -1,21 +1,24 @@
 {
   "forge-1.20.1": {
-    "without-jade": 62,
-    "with-jade": 64,
-    "ui": true
+    "without-jade": 151,
+    "with-jade": 160,
+    "ui": true,
+    "lootr-without-jade": 157
   },
   "neoforge-1.21.1": {
-    "without-jade": 62,
-    "with-jade": 64,
+    "without-jade": 151,
+    "with-jade": 164,
     "ui": true
   },
   "neoforge-26.1.2": {
-    "without-jade": 57,
-    "with-jade": 59,
+    "without-jade": 146,
+    "with-jade": 162,
     "ui": true
   },
   "core": {
-    "passed": true,
-    "checks": 15018
+    "generationChecks": 4196,
+    "storageChecks": 15018,
+    "checks": 19214,
+    "passed": true
   }
 }

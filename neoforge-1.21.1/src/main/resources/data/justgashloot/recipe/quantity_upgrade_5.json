@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "nMn",
+    "MUM",
+    "nMn"
+  ],
+  "key": {
+    "n": {
+      "type": "justgashloot:exact_enchantment",
+      "enchantment": "minecraft:fortune"
+    },
+    "M": {
+      "item": "minecraft:crying_obsidian"
+    },
+    "U": {
+      "item": "justgashloot:quantity_upgrade_4"
+    }
+  },
+  "result": {
+    "id": "justgashloot:quantity_upgrade_5",
+    "count": 1
+  }
+}

@@ -1,11 +1,11 @@
 package net.gasharaujo.justgashloot.client;
-import net.gasharaujo.justgashloot.LootMenu;
+import net.gasharaujo.justgashloot.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Screenshot;
 import net.minecraft.world.inventory.ClickType;
 public final class VerificationClient {
     private static int stage, ticks, wait;
-    private static boolean rightClick, leftClick;
+    private static boolean rightClick, leftClick, tabletOpen, pagination, search, selection, tableCapture;
     public static void install() { net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener((net.neoforged.neoforge.client.event.ClientTickEvent.Post event) -> tick()); }
     private static void tick() {
         Minecraft mc = Minecraft.getInstance();
@@ -34,9 +34,74 @@ public final class VerificationClient {
         } else if (stage == 7 && wait > 80) {
             capture(mc, "jgl-world-hud.png"); stage = 8; wait = 0;
         } else if (stage == 8) {
-            try { java.nio.file.Files.writeString(java.nio.file.Path.of("ui-results.json"), "{\n  \"passed\": " + (rightClick && leftClick) + ",\n  \"rightClickPacket\": " + rightClick + ",\n  \"leftClickPacket\": " + leftClick + "\n}\n"); } catch (java.io.IOException error) { throw new RuntimeException(error); }
-            System.out.println("JGL_UI_VERIFICATION " + (rightClick && leftClick ? "PASS" : "FAIL")); mc.stop(); stage = 9;
+            mc.player.connection.sendCommand("jglv2tablet"); stage = 9; wait = 0;
+        } else if (stage == 9) {
+            var pos = mc.player.blockPosition().offset(1, 0, -3);
+            var hit = new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(pos), net.minecraft.core.Direction.UP, pos, false);
+            mc.gameMode.useItemOn(mc.player, net.minecraft.world.InteractionHand.MAIN_HAND, hit); stage = 20; wait = 0;
+        } else if (stage == 20) {
+            tableCapture = mc.screen == null && TabletSelection.active.equals("justgashloot:verification/basic");
+            if (!tableCapture) return;
+            mc.options.keyShift.setDown(true); stage = 10; wait = 0;
+        } else if (stage == 10) {
+            mc.gameMode.useItem(mc.player, net.minecraft.world.InteractionHand.MAIN_HAND); stage = 11; wait = 0;
+        } else if (stage == 11 && mc.screen instanceof TabletScreen screen) {
+            tabletOpen = TabletSelection.active.equals("justgashloot:verification/basic");
+            mc.options.keyShift.setDown(false); capture(mc, "jgl-tablet-scale-3.png");
+            mc.options.guiScale().set(2); mc.resizeDisplay(); stage = 12; wait = 0;
+        } else if (stage == 12 && mc.screen instanceof TabletScreen screen) {
+            capture(mc, "jgl-tablet-scale-2.png");
+            var next = (net.minecraft.client.gui.components.Button) field(screen, "next");
+            for (int i = 0; i < 4; i++) press(next);
+            stage = 13; wait = 0;
+        } else if (stage == 13 && mc.screen instanceof TabletScreen screen) {
+            LibraryState state = (LibraryState) field(screen, "state");
+            if (state.offset() != 32) return;
+            pagination = state.total() == 42;
+            ((net.minecraft.client.gui.components.EditBox) field(screen, "search")).setValue("verification/luck"); stage = 14; wait = 0;
+        } else if (stage == 14 && mc.screen instanceof TabletScreen screen) {
+            LibraryState state = (LibraryState) field(screen, "state");
+            if (state.tables().size() != 1 || !state.tables().get(0).equals("justgashloot:verification/luck")) return;
+            search = true;
+            var rows = (net.minecraft.client.gui.components.Button[]) field(screen, "rows"); press(rows[0]); stage = 15; wait = 0;
+        } else if (stage == 15 && mc.screen instanceof TabletScreen screen) {
+            if (!TabletSelection.active.equals("justgashloot:verification/luck")) return;
+            selection = true; capture(mc, "jgl-tablet-selected.png"); screen.onClose(); stage = 16; wait = 0;
+        } else if (stage == 16) {
+            var pos = mc.player.blockPosition().offset(2, 0, -3);
+            var hit = new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(pos), net.minecraft.core.Direction.UP, pos, false);
+            mc.gameMode.useItemOn(mc.player, net.minecraft.world.InteractionHand.MAIN_HAND, hit); stage = 17; wait = 0;
+        } else if (stage == 17) {
+            var target = net.minecraft.world.phys.Vec3.atCenterOf(mc.player.blockPosition().offset(2, 0, -3));
+            var direction = target.subtract(mc.player.getEyePosition());
+            mc.player.setYRot((float) Math.toDegrees(Math.atan2(-direction.x, direction.z)));
+            mc.player.setXRot((float) Math.toDegrees(Math.atan2(-direction.y, Math.sqrt(direction.x * direction.x + direction.z * direction.z))));
+            mc.player.connection.sendCommand("jglv2assert"); stage = 18; wait = 0;
+        } else if (stage == 18) {
+            capture(mc, "jgl-generator-table-hud.png"); stage = 21; wait = 0;
+        } else if (stage == 21) {
+            boolean server = false;
+            try {
+                var report = java.nio.file.Path.of("ui-server-results.json");
+                if (!java.nio.file.Files.exists(report)) return;
+                server = com.google.gson.JsonParser.parseString(java.nio.file.Files.readString(report)).getAsJsonObject().get("passed").getAsBoolean();
+                boolean passed = rightClick && leftClick && tableCapture && tabletOpen && pagination && search && selection && server;
+                var result = new com.google.gson.JsonObject();
+                result.addProperty("passed", passed); result.addProperty("rightClickPacket", rightClick); result.addProperty("leftClickPacket", leftClick);
+                result.addProperty("tabletCapturePacket", tableCapture); result.addProperty("tabletShiftRightClick", tabletOpen); result.addProperty("tabletPagination", pagination);
+                result.addProperty("tabletSearch", search); result.addProperty("tabletSelection", selection); result.addProperty("serverTabletConfiguration", server);
+                java.nio.file.Files.writeString(java.nio.file.Path.of("ui-results.json"), new com.google.gson.GsonBuilder().setPrettyPrinting().create().toJson(result) + "\n");
+                System.out.println("JGL_UI_VERIFICATION " + (passed ? "PASS" : "FAIL"));
+            } catch (java.io.IOException error) { throw new RuntimeException(error); }
+            mc.stop(); stage = 19;
         }
+    }
+    private static Object field(Object object, String name) {
+        try { var field = object.getClass().getDeclaredField(name); field.setAccessible(true); return field.get(object); }
+        catch (ReflectiveOperationException error) { throw new RuntimeException(error); }
+    }
+    private static void press(net.minecraft.client.gui.components.Button button) {
+        button.onPress();
     }
     private static void capture(Minecraft mc, String name) { Screenshot.grab(mc.gameDirectory, name, mc.getMainRenderTarget(), result -> System.out.println("JGL_SCREENSHOT " + name)); }
 }

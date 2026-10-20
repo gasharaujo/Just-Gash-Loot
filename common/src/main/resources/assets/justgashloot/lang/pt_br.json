@@ -8,7 +8,6 @@
   "item.justgashloot.upgrade_base": "Base de Upgrade",
   "item.justgashloot.loot_tablet": "Tablet de Loot",
   "item.justgashloot.player_upgrade": "Upgrade de Jogador",
-  "tooltip.justgashloot.upgrade_pending": "Estrutura inicial: os efeitos dos upgrades ainda não estão ativos.",
   "message.justgashloot.large_drop": "Este Loot Generator derrubará mais de 300 pilhas. Agache (Shift) para confirmar. Lava e FE serão perdidos.",
   "item.justgashloot.energy_upgrade_1": "Upgrade de Energia 1",
   "item.justgashloot.energy_upgrade_2": "Upgrade de Energia 2",
@@ -29,5 +28,16 @@
   "item.justgashloot.quality_upgrade_2": "Upgrade de Qualidade 2",
   "item.justgashloot.quality_upgrade_3": "Upgrade de Qualidade 3",
   "item.justgashloot.quality_upgrade_4": "Upgrade de Qualidade 4",
-  "item.justgashloot.quality_upgrade_5": "Upgrade de Qualidade 5"
+  "item.justgashloot.quality_upgrade_5": "Upgrade de Qualidade 5",
+  "tooltip.justgashloot.active": "Loot table ativa: %s",
+  "tooltip.justgashloot.none": "Nenhuma",
+  "gui.justgashloot.library": "Loot Tablet — coleção pessoal",
+  "gui.justgashloot.search": "Buscar ID de loot table",
+  "gui.justgashloot.empty": "Nenhuma loot table salva corresponde à busca.",
+  "gui.justgashloot.owner": "Contexto de jogador: %s",
+  "message.justgashloot.no_table": "Este alvo não possui uma loot table real para capturar. Conteúdos fixos do Lootr não podem ser copiados.",
+  "message.justgashloot.no_active": "Selecione uma loot table salva e disponível com Shift + botão direito primeiro.",
+  "message.justgashloot.captured": "Salva e selecionada: %s",
+  "message.justgashloot.configured": "Loot Generator configurado: %s",
+  "message.justgashloot.unbound_player": "Reinstale o Player Upgrade para associá-lo ao jogador que o instalar."
 }

@@ -35,5 +35,46 @@ public final class VerificationScene {
             Platform.open(player, machine);
             return 1;
         }));
+        dispatcher.register(Commands.literal("jglv2tablet").executes(context -> {
+            var player = context.getSource().getPlayerOrException(); var level = LootRuntime.level(player);
+            try { java.nio.file.Files.deleteIfExists(java.nio.file.Path.of("ui-server-results.json")); }
+            catch (java.io.IOException error) { throw new RuntimeException(error); }
+            var pos = player.blockPosition().offset(2, 0, -3);
+            if (level.getBlockEntity(pos) instanceof LootEntity old) { old.outputs.clear(); old.upgrades.clearContent(); }
+            level.setBlockAndUpdate(pos, ModContent.BLOCK.get().defaultBlockState());
+            var machine = (LootEntity) level.getBlockEntity(pos);
+            machine.upgrades.setItem(0, new ItemStack(findUpgrade(UpgradeItem.Category.SPEED, 5)));
+            var menu = new LootMenu(88, player.getInventory(), machine);
+            menu.setCarried(new ItemStack(findUpgrade(UpgradeItem.Category.PLAYER, 0)));
+            menu.handleClick(40, 0, "PICKUP", player);
+            VerificationChecks.check(machine.playerContext(level) == player, "Online Player Upgrade resolves the connected real player");
+            machine.setTable(VerificationV2Checks.PLAYER);
+            for (int i = 0; i < 4; i++) { machine.energy = 16000; machine.serverTick(); }
+            VerificationChecks.check(machine.count(0) == 1 && machine.template(0).is(Items.EMERALD), "Connected real player generates player-conditioned loot");
+            machine.energy = 0;
+            var entry = Tablets.library(player); entry.tables.clear();
+            for (int i = 0; i < 40; i++) entry.capture("justgashloot:removed/table_" + String.format(java.util.Locale.ROOT, "%02d", i));
+            entry.capture(VerificationV2Checks.BASIC); entry.capture(VerificationV2Checks.LUCK);
+            VerificationV2Platform.installCaptureTarget(level, player.blockPosition().offset(1, 0, -3));
+            LibraryData.get(level.getServer()).setDirty();
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(ModContent.ALL_ITEMS.stream().map(java.util.function.Supplier::get).filter(item -> item instanceof TabletItem).findFirst().orElseThrow()));
+            Tablets.sync(player, false, "", 0);
+            return 1;
+        }));
+        dispatcher.register(Commands.literal("jglv2assert").executes(context -> {
+            var player = context.getSource().getPlayerOrException(); var level = LootRuntime.level(player);
+            var pos = player.blockPosition().offset(2, 0, -3);
+            boolean configured = level.getBlockEntity(pos) instanceof LootEntity machine && machine.tableId().equals(VerificationV2Checks.LUCK);
+            boolean selected = Tablets.library(player).active().equals(VerificationV2Checks.LUCK);
+            boolean sourcePreserved = VerificationV2Checks.BASIC.equals(LootRuntime.capture(level.getBlockEntity(player.blockPosition().offset(1, 0, -3))));
+            boolean passed = configured && selected && sourcePreserved;
+            try { java.nio.file.Files.writeString(java.nio.file.Path.of("ui-server-results.json"), "{\"passed\":" + passed + ",\"configuredByTablet\":" + configured + ",\"personalSelection\":" + selected + "}\n"); }
+            catch (java.io.IOException error) { throw new RuntimeException(error); }
+            System.out.println("JGL_UI_SERVER " + (passed ? "PASS" : "FAIL"));
+            return passed ? 1 : 0;
+        }));
+    }
+    private static net.minecraft.world.item.Item findUpgrade(UpgradeItem.Category category, int tier) {
+        return ModContent.ALL_ITEMS.stream().map(java.util.function.Supplier::get).filter(item -> item instanceof UpgradeItem value && value.category == category && value.tier == tier).findFirst().orElseThrow();
     }
 }

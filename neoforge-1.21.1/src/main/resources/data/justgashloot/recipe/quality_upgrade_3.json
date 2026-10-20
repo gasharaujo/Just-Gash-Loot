@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "nMn",
+    "MUM",
+    "nMn"
+  ],
+  "key": {
+    "n": {
+      "type": "justgashloot:exact_enchantment",
+      "enchantment": "minecraft:looting"
+    },
+    "M": {
+      "item": "minecraft:diamond_block"
+    },
+    "U": {
+      "item": "justgashloot:quality_upgrade_2"
+    }
+  },
+  "result": {
+    "id": "justgashloot:quality_upgrade_3",
+    "count": 1
+  }
+}

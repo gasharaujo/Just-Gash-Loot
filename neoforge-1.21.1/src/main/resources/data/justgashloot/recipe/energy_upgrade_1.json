@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "nMn",
+    "MUM",
+    "nMn"
+  ],
+  "key": {
+    "n": {
+      "item": "minecraft:redstone_block"
+    },
+    "M": {
+      "item": "minecraft:iron_block"
+    },
+    "U": {
+      "item": "justgashloot:upgrade_base"
+    }
+  },
+  "result": {
+    "id": "justgashloot:energy_upgrade_1",
+    "count": 1
+  }
+}

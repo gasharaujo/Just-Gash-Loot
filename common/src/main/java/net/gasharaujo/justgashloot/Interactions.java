@@ -12,6 +12,10 @@ public final class Interactions {
     public static void use(Level level, BlockPos pos, Player player, InteractionHand hand) {
         if (Platform.clientSide(level) || !(level.getBlockEntity(pos) instanceof LootEntity machine)) return;
         ItemStack held = player.getItemInHand(hand);
+        if (Tablets.isTablet(held) && player instanceof net.minecraft.server.level.ServerPlayer server) {
+            if (player.isShiftKeyDown()) Tablets.sync(server, true, "", 0); else Tablets.configure(server, machine);
+            return;
+        }
         if (held.is(Items.LAVA_BUCKET)) {
             if (machine.lava <= LootRules.LAVA_CAPACITY - 1000) {
                 machine.lava += 1000; machine.setChanged();

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "nMn",
+    "MUM",
+    "nMn"
+  ],
+  "key": {
+    "n": {
+      "neoforge:ingredient_type": "justgashloot:exact_enchantment",
+      "enchantment": "minecraft:fortune"
+    },
+    "M": "minecraft:emerald_block",
+    "U": "justgashloot:quantity_upgrade_3"
+  },
+  "result": {
+    "id": "justgashloot:quantity_upgrade_4",
+    "count": 1
+  }
+}

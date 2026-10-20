@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "frf",
+    "btb",
+    "frf"
+  ],
+  "key": {
+    "f": "minecraft:iron_ingot",
+    "r": "minecraft:redstone",
+    "b": "minecraft:chest",
+    "t": "justgashloot:loot_tablet"
+  },
+  "result": {
+    "id": "justgashloot:loot_generator",
+    "count": 1
+  }
+}

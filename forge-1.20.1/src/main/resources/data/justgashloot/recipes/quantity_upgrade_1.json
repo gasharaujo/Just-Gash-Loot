@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "nMn",
+    "MUM",
+    "nMn"
+  ],
+  "key": {
+    "n": {
+      "type": "justgashloot:exact_enchantment",
+      "enchantment": "minecraft:fortune"
+    },
+    "M": {
+      "item": "minecraft:iron_block"
+    },
+    "U": {
+      "item": "justgashloot:upgrade_base"
+    }
+  },
+  "result": {
+    "item": "justgashloot:quantity_upgrade_1",
+    "count": 1
+  }
+}

@@ -8,7 +8,6 @@
   "item.justgashloot.upgrade_base": "Upgrade Base",
   "item.justgashloot.loot_tablet": "Loot Tablet",
   "item.justgashloot.player_upgrade": "Player Upgrade",
-  "tooltip.justgashloot.upgrade_pending": "Initial structure: upgrade effects are not yet enabled.",
   "message.justgashloot.large_drop": "This Loot Generator will drop more than 300 stacks. Sneak (Shift) to confirm. Lava and FE will be lost.",
   "item.justgashloot.energy_upgrade_1": "Energy Upgrade 1",
   "item.justgashloot.energy_upgrade_2": "Energy Upgrade 2",
@@ -29,5 +28,16 @@
   "item.justgashloot.quality_upgrade_2": "Quality Upgrade 2",
   "item.justgashloot.quality_upgrade_3": "Quality Upgrade 3",
   "item.justgashloot.quality_upgrade_4": "Quality Upgrade 4",
-  "item.justgashloot.quality_upgrade_5": "Quality Upgrade 5"
+  "item.justgashloot.quality_upgrade_5": "Quality Upgrade 5",
+  "tooltip.justgashloot.active": "Active loot table: %s",
+  "tooltip.justgashloot.none": "None",
+  "gui.justgashloot.library": "Loot Tablet — personal collection",
+  "gui.justgashloot.search": "Search loot table ID",
+  "gui.justgashloot.empty": "No saved loot tables match this search.",
+  "gui.justgashloot.owner": "Player context: %s",
+  "message.justgashloot.no_table": "This target has no real loot table to capture. Fixed Lootr contents cannot be copied.",
+  "message.justgashloot.no_active": "Select a saved, available loot table with Shift + right click first.",
+  "message.justgashloot.captured": "Saved and selected: %s",
+  "message.justgashloot.configured": "Loot Generator configured: %s",
+  "message.justgashloot.unbound_player": "Reinstall the Player Upgrade to associate it with its installer."
 }

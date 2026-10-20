@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "nMn",
+    "MUM",
+    "nMn"
+  ],
+  "key": {
+    "n": {
+      "item": "minecraft:redstone_block"
+    },
+    "M": {
+      "item": "minecraft:diamond_block"
+    },
+    "U": {
+      "item": "justgashloot:energy_upgrade_2"
+    }
+  },
+  "result": {
+    "item": "justgashloot:energy_upgrade_3",
+    "count": 1
+  }
+}

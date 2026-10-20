@@ -52,14 +52,19 @@ public final class LootMenu extends VersionedMenu {
     }
     @Override public void broadcastChanges() {
         super.broadcastChanges();
-        if (machine != null && inventory.player instanceof ServerPlayer player && lastRevision != machine.revision) {
+        if (machine != null && inventory.player instanceof ServerPlayer player && lastRevision != machine.outputs.revision()) {
             for (int i = 0; i < 36; i++) counts[i] = machine.count(i);
             UiNetwork.send(player, new CountState(containerId, counts.clone()));
-            lastRevision = machine.revision;
+            lastRevision = machine.outputs.revision();
         }
     }
     @Override public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) { return slot.index >= UPGRADES && super.canTakeItemForPickAll(stack, slot); }
     @Override public void handleClick(int slotId, int button, String type, Player player) {
+        long before = machine == null ? 0 : machine.playerSlotRevision;
+        try { handleClickInternal(slotId, button, type, player); }
+        finally { if (machine != null) machine.bindInstaller(player, before); }
+    }
+    private void handleClickInternal(int slotId, int button, String type, Player player) {
         if (slotId < 0 || slotId >= 36) { vanillaClicked(slotId, button, type, player); return; }
         // Output icons are views only. Never let vanilla mutate the large count through a Slot.
         if (machine == null || !stillValid(player) || player.isSpectator()) return;
@@ -88,6 +93,11 @@ public final class LootMenu extends VersionedMenu {
         broadcastChanges();
     }
     @Override public ItemStack quickMoveStack(Player player, int index) {
+        long before = machine == null ? 0 : machine.playerSlotRevision;
+        try { return quickMoveInternal(player, index); }
+        finally { if (machine != null) machine.bindInstaller(player, before); }
+    }
+    private ItemStack quickMoveInternal(Player player, int index) {
         if (index < 0 || index >= END || !stillValid(player)) return ItemStack.EMPTY;
         if (index < 36) {
             if (machine == null) return ItemStack.EMPTY;

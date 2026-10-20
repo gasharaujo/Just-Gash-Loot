@@ -53,7 +53,6 @@ public final class LootScreen extends AbstractContainerScreen<LootMenu> {
     @Override protected List<Component> getTooltipFromContainerItem(ItemStack stack) {
         List<Component> result = new ArrayList<>(super.getTooltipFromContainerItem(stack));
         if (hoveredSlot != null && hoveredSlot.index < 36) result.add(Component.translatable("gui.justgashloot.count", java.text.NumberFormat.getIntegerInstance().format(menu.counts[hoveredSlot.index])));
-        if (stack.getItem() instanceof UpgradeItem) result.add(Component.translatable("tooltip.justgashloot.upgrade_pending"));
         return result;
     }
 }

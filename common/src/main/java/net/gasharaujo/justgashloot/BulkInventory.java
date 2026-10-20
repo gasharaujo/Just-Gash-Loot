@@ -8,6 +8,7 @@ import java.util.function.UnaryOperator;
 public final class BulkInventory<T> {
     private final Object[] types;
     private final long[] counts;
+    private long revision;
     private final BiPredicate<T, T> same;
     private final UnaryOperator<T> copy;
 
@@ -18,6 +19,7 @@ public final class BulkInventory<T> {
         this.copy = copy;
     }
     public int size() { return counts.length; }
+    public long revision() { return revision; }
     @SuppressWarnings("unchecked")
     public T type(int slot) { return (T) types[Objects.checkIndex(slot, size())]; }
     public long count(int slot) { return counts[Objects.checkIndex(slot, size())]; }
@@ -34,6 +36,7 @@ public final class BulkInventory<T> {
                 if (moved == 0) continue;
                 if (counts[i] == 0) types[i] = copy.apply(type);
                 counts[i] += moved;
+                revision++;
                 remaining -= moved;
             }
         }
@@ -43,6 +46,7 @@ public final class BulkInventory<T> {
         if (amount < 0) throw new IllegalArgumentException("Negative amount");
         int moved = (int) Math.min(count(slot), amount);
         counts[slot] -= moved;
+        if (moved > 0) revision++;
         if (counts[slot] == 0) types[slot] = null;
         return moved;
     }
@@ -51,13 +55,16 @@ public final class BulkInventory<T> {
         if (count < 0) throw new IllegalArgumentException("Negative count");
         types[slot] = count == 0 ? null : copy.apply(Objects.requireNonNull(type));
         counts[slot] = count;
+        revision++;
     }
     public void clear() {
+        revision++;
         java.util.Arrays.fill(types, null);
         java.util.Arrays.fill(counts, 0);
     }
     public Snapshot snapshot() { return new Snapshot(types.clone(), counts.clone()); }
     public void restore(Snapshot snapshot) {
+        revision++;
         System.arraycopy(snapshot.types, 0, types, 0, size());
         System.arraycopy(snapshot.counts, 0, counts, 0, size());
     }

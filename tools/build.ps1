@@ -10,18 +10,20 @@ function Find-Jdk([int]$Major) {
     }
     foreach ($candidate in ($candidates | Select-Object -Unique)) {
         $java = Join-Path $candidate 'bin/java.exe'
-        if (Test-Path -LiteralPath $java) {
-            $version = (& $java -version 2>&1 | Out-String)
-            if ($version -match ('version "' + $Major + '\.')) { return $candidate }
+        $releaseFile = Join-Path $candidate 'release'
+        $compiler = Join-Path $candidate 'bin/javac.exe'
+        if ((Test-Path -LiteralPath $java) -and (Test-Path -LiteralPath $compiler) -and (Test-Path -LiteralPath $releaseFile)) {
+            $version = Get-Content -Raw -LiteralPath $releaseFile
+            if ($version -match ('JAVA_VERSION="' + $Major + '(\.|"|-)')) { return $candidate }
         }
     }
-    throw "JDK $Major não encontrado. Instale-o ou configure JAVA_HOME."
+    throw "JDK $Major not found. Install it or configure JAVA_HOME."
 }
 
 $matrix = @(
-    @{ Module = 'forge-1.20.1'; Java = 17; Instance = '20.1'; Jar = 'justgashloot-forge-1.20.1-0.1.0.jar' },
-    @{ Module = 'neoforge-1.21.1'; Java = 21; Instance = '21'; Jar = 'justgashloot-neoforge-1.21.1-0.1.0.jar' },
-    @{ Module = 'neoforge-26.1.2'; Java = 25; Instance = '26.1.2'; Jar = 'justgashloot-neoforge-26.1.2-0.1.0.jar' }
+    @{ Module = 'forge-1.20.1'; Java = 17; Instance = '20.1'; Jar = 'justgashloot-forge-1.20.1-2.0.0.jar' },
+    @{ Module = 'neoforge-1.21.1'; Java = 21; Instance = '21'; Jar = 'justgashloot-neoforge-1.21.1-2.0.0.jar' },
+    @{ Module = 'neoforge-26.1.2'; Java = 25; Instance = '26.1.2'; Jar = 'justgashloot-neoforge-26.1.2-2.0.0.jar' }
 )
 $originalJavaHome = $env:JAVA_HOME
 try {
@@ -43,14 +45,16 @@ try {
         Copy-Item -LiteralPath $builtJar -Destination (Join-Path $artifactDirectory $target.Jar) -Force
         if ($Install) {
             $modsDirectory = Join-Path $env:USERPROFILE "curseforge/minecraft/Instances/$($target.Instance)/mods"
-            if (-not (Test-Path -LiteralPath $modsDirectory)) { throw "Instância não encontrada: $modsDirectory" }
+            if (-not (Test-Path -LiteralPath $modsDirectory)) { throw "Instance not found: $modsDirectory" }
             Get-ChildItem -File -LiteralPath $modsDirectory -Filter 'justgashloot-*.jar' | Where-Object { $_.Name -ne $target.Jar } | ForEach-Object {
-                Move-Item -LiteralPath $_.FullName -Destination ($_.FullName + '.disabled')
+                $disabledPath = $_.FullName + '.disabled'
+                if (Test-Path -LiteralPath $disabledPath) { $disabledPath += '.' + [Guid]::NewGuid().ToString('N') }
+                Move-Item -LiteralPath $_.FullName -Destination $disabledPath
             }
             Copy-Item -LiteralPath $builtJar -Destination (Join-Path $modsDirectory $target.Jar) -Force
         }
     }
-    Get-ChildItem -File -LiteralPath $artifactDirectory -Filter '*.jar' | Get-FileHash -Algorithm SHA256 |
-        ForEach-Object { "$($_.Hash.ToLowerInvariant())  $([System.IO.Path]::GetFileName($_.Path))" } |
-        Set-Content -LiteralPath (Join-Path $artifactDirectory 'SHA256SUMS.txt') -Encoding utf8
+    $hashLines = @(Get-ChildItem -File -LiteralPath $artifactDirectory -Filter '*.jar' | Get-FileHash -Algorithm SHA256 |
+        ForEach-Object { "$($_.Hash.ToLowerInvariant())  $([System.IO.Path]::GetFileName($_.Path))" })
+    [System.IO.File]::WriteAllLines((Join-Path $artifactDirectory 'SHA256SUMS.txt'), $hashLines, [System.Text.UTF8Encoding]::new($false))
 } finally { $env:JAVA_HOME = $originalJavaHome }

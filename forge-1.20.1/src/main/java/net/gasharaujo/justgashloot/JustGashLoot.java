@@ -4,7 +4,7 @@ public final class JustGashLoot {
     public static final String MOD_ID = "justgashloot";
     public JustGashLoot() {
         var bus = net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext.get().getModEventBus();
-        ModContent.register(bus); UiNetwork.register(bus); ClientInit.register(bus); Protection.register();
+        ModContent.register(bus); UiNetwork.register(bus); ClientInit.register(bus); Protection.register(); TabletNetwork.register(bus); TabletEvents.register(); EnchantedIngredient.register(bus);
         if (Boolean.getBoolean("justgashloot.verification")) {
             try { Class.forName("net.gasharaujo.justgashloot.VerificationMod").getMethod("install").invoke(null); }
             catch (ReflectiveOperationException error) { throw new IllegalStateException("Verification sources are required for this development run", error); }

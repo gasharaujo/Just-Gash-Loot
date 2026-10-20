@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "nMn",
+    "MUM",
+    "nMn"
+  ],
+  "key": {
+    "n": "minecraft:clock",
+    "M": "minecraft:iron_block",
+    "U": "justgashloot:upgrade_base"
+  },
+  "result": {
+    "id": "justgashloot:speed_upgrade_1",
+    "count": 1
+  }
+}

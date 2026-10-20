@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "nMn",
+    "MUM",
+    "nMn"
+  ],
+  "key": {
+    "n": "minecraft:iron_nugget",
+    "M": "minecraft:polished_deepslate",
+    "U": "minecraft:redstone_block"
+  },
+  "result": {
+    "id": "justgashloot:upgrade_base",
+    "count": 1
+  }
+}

@@ -39,16 +39,22 @@ public final class JadeCompat implements IWailaPlugin {
     public static final class ExactCounts implements IServerDataProvider<BlockAccessor>, IBlockComponentProvider {
         @Override public net.minecraft.resources.ResourceLocation getUid() { return UID; }
         @Override public void appendServerData(CompoundTag data, BlockAccessor accessor) {
-            if (accessor.getBlockEntity() instanceof LootEntity machine) StoredLoot.CODEC.listOf()
+            if (accessor.getBlockEntity() instanceof LootEntity machine) {
+                data.putString("JglTable", machine.tableId()); data.putString("JglOwner", machine.ownerName());
+                StoredLoot.CODEC.listOf()
                     .encodeStart(net.minecraft.nbt.NbtOps.INSTANCE, machine.savedLoot()).result().ifPresent(tag -> data.put("JglExactLoot", tag));
+            }
         }
         @Override public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+            String table = accessor.getServerData().getString("JglTable"), owner = accessor.getServerData().getString("JglOwner");
+            if (!table.isEmpty()) tooltip.add(Component.translatable("tooltip.justgashloot.active", table));
+            if (!owner.isEmpty()) tooltip.add(Component.translatable("gui.justgashloot.owner", owner));
             if (!accessor.getServerData().contains("JglExactLoot")) return;
             List<StoredLoot> entries = StoredLoot.CODEC.listOf().parse(net.minecraft.nbt.NbtOps.INSTANCE, accessor.getServerData().get("JglExactLoot")).result().orElse(List.of());
             int limit = accessor.showDetails() ? 36 : 4;
             for (int i = 0; i < entries.size() && i < limit; i++) {
                 StoredLoot entry = entries.get(i);
-                tooltip.add(Component.literal(java.text.NumberFormat.getIntegerInstance(Locale.ROOT).format(entry.count()) + " × ").append(entry.item().getHoverName()));
+                tooltip.add(Component.literal(java.text.NumberFormat.getIntegerInstance(Locale.ROOT).format(entry.count()) + " \u00d7 ").append(entry.item().getHoverName()));
             }
             if (entries.size() > limit) tooltip.add(Component.translatable("gui.justgashloot.more", entries.size() - limit));
         }

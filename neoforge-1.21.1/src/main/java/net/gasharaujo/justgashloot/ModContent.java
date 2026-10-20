@@ -22,7 +22,7 @@ public final class ModContent {
     static {
         item("loot_generator", () -> new BlockItem(BLOCK.get(), props("loot_generator")));
         item("upgrade_base", () -> new Item(props("upgrade_base")));
-        item("loot_tablet", () -> new Item(props("loot_tablet").stacksTo(1)));
+        item("loot_tablet", () -> new TabletItem(props("loot_tablet")));
         for (UpgradeItem.Category category : UpgradeItem.Category.values()) {
             int tiers = category == UpgradeItem.Category.PLAYER ? 1 : 5;
             for (int i = 1; i <= tiers; i++) {

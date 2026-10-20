@@ -65,6 +65,8 @@ public final class VerificationMod {
     }
 
     static void jadeData(LootEntity machine) {
+        var previousMemory = machine.memory; machine.memory = new MachineMemory();
+        machine.memory.table = VerificationV2Checks.BASIC; machine.memory.owner = new java.util.UUID(0, 2); machine.memory.ownerName = "JadeInstaller";
         machine.outputs.clear(); machine.addGeneratedLoot(new ItemStack(Items.DIAMOND), Long.MAX_VALUE);
         var group = JadeCompat.groups(machine).get(0);
         VerificationChecks.check(group.getExtraData().getLongArray("Counts")[0] == Long.MAX_VALUE && group.views.get(0).getCount() == 1, "Jade bulk provider carries exact long count separately from safe icon");
@@ -76,6 +78,8 @@ public final class VerificationMod {
             default -> null;
         });
         new JadeCompat.ExactCounts().appendServerData(data, accessor);
+        VerificationChecks.check(data.getString("JglTable").equals(VerificationV2Checks.BASIC) && data.getString("JglOwner").equals("JadeInstaller"), "Jade payload identifies the configured table and Player Upgrade installer");
+        machine.memory = previousMemory;
         var decoded = StoredLoot.CODEC.listOf().parse(machine.getLevel().registryAccess().createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE), data.get("JglExactLoot")).result().orElseThrow();
         VerificationChecks.check(decoded.get(0).count() == Long.MAX_VALUE, "Jade server payload preserves exact long maximum through NBT codec");
         machine.outputs.clear();
