@@ -43,6 +43,16 @@ final class VerificationV2Platform {
         for (String category : List.of("energy", "speed", "quantity", "quality")) for (int tier = 1; tier <= 5; tier++) names.add(category + "_upgrade_" + tier);
         for (String name : names) {
             var recipe = recipe(level, name); var stacks = ingredients(level, name); var input = input(player, stacks);
+            if (name.startsWith("quantity_") || name.startsWith("quality_")) {
+                var corner = recipe.pattern.ingredients().get(0).orElseThrow();
+                check(!corner.isEmpty() && corner.items().noneMatch(value -> value.value() == Items.AIR || value.value() == Items.APPLE) && corner.test(stacks.get(0)), "Enchanted ingredient excludes unrelated items from recipe indexes for " + name);
+                var buffer = new net.minecraft.network.RegistryFriendlyByteBuf(io.netty.buffer.Unpooled.buffer(), level.registryAccess(), net.neoforged.neoforge.network.connection.ConnectionType.NEOFORGE);
+                try {
+                    Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, corner);
+                    var synced = Ingredient.CONTENTS_STREAM_CODEC.decode(buffer);
+                    check(!synced.isEmpty() && synced.test(stacks.get(0)) && !synced.test(new ItemStack(Items.BOOK)), "Enchanted ingredient keeps its display and predicate after network sync for " + name);
+                } finally { buffer.release(); }
+            }
             check(recipe.matches(input, level) && recipe.assemble(input).is(item("justgashloot:" + name)), "Registered crafting recipe matches and produces " + name);
             player.getInventory().clearContent();
             var menu = new net.minecraft.world.inventory.CraftingMenu(102, player.getInventory(), net.minecraft.world.inventory.ContainerLevelAccess.create(level, new BlockPos(12, 80, 0))); player.containerMenu = menu;
@@ -54,6 +64,9 @@ final class VerificationV2Platform {
             boolean fortune = category.equals("quantity"); var stacks = ingredients(level, category + "_upgrade_1"); var recipe = recipe(level, category + "_upgrade_1");
             for (int tier : new int[]{2, 4}) { stacks.set(0, enchanted(level, fortune, true, tier)); check(!recipe.matches(input(player, stacks), level), category + " rejects enchanted book level " + tier); }
             stacks.set(0, enchanted(level, fortune, false, 3)); check(recipe.matches(input(player, stacks), level), category + " accepts a damaged enchanted tool mixed with books");
+        }
+        if (net.neoforged.fml.ModList.get().isLoaded("kubejs")) {
+            check(level.getServer().getRecipeManager().byKey(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.RECIPE, LootRuntime.id("minecraft:golden_apple"))).isEmpty(), "KubeJS blocked-input filter ran without removing any upgrade recipe");
         }
         player.containerMenu = player.inventoryMenu;
     }

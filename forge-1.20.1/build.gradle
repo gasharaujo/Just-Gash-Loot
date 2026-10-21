@@ -100,3 +100,9 @@ minecraft.runs.configureEach { property 'justgashloot.expectLibrary', project.ha
 
 repositories { maven { url = 'https://api.modrinth.com/maven'; content { includeGroup 'maven.modrinth' } } }
 if (project.hasProperty('lootrRuntime')) { dependencies { runtimeOnly fg.deobf('maven.modrinth:lootr:mWTXC1ZX') } }
+
+if (project.hasProperty('jeiJar')) {
+    repositories { flatDir { dirs file(project.property('jeiJar')).parentFile } }
+    dependencies { runtimeOnly fg.deobf("local.jei:jei-1.20.1-forge:${project.property('jeiVersion')}") }
+}
+if (project.hasProperty('recipeVerification')) { minecraft.runs.client.property 'justgashloot.recipeVerification', 'true' }

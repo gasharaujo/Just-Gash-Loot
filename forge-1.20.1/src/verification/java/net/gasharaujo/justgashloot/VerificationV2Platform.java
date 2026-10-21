@@ -45,6 +45,16 @@ final class VerificationV2Platform {
         for (String category : List.of("energy", "speed", "quantity", "quality")) for (int tier = 1; tier <= 5; tier++) names.add(category + "_upgrade_" + tier);
         for (String name : names) {
             var recipe = recipe(level, name); var stacks = ingredients(level, name); var input = input(player, stacks);
+            if (name.startsWith("quantity_") || name.startsWith("quality_")) {
+                var corner = recipe.getIngredients().get(0);
+                check(!corner.isEmpty() && corner.getItems().length > 0 && java.util.Arrays.stream(corner.getItems()).allMatch(corner::test), "Enchanted ingredient is nonempty and advertises matching examples for " + name);
+                var buffer = new net.minecraft.network.FriendlyByteBuf(io.netty.buffer.Unpooled.buffer());
+                try {
+                    corner.toNetwork(buffer);
+                    var synced = Ingredient.fromNetwork(buffer);
+                    check(!synced.isEmpty() && synced.test(stacks.get(0)) && !synced.test(new ItemStack(Items.BOOK)), "Enchanted ingredient keeps its display and predicate after network sync for " + name);
+                } finally { buffer.release(); }
+            }
             check(recipe.matches(input, level) && recipe.assemble(input, level.registryAccess()).is(item("justgashloot:" + name)), "Registered crafting recipe matches and produces " + name);
             player.getInventory().clearContent();
             var menu = new net.minecraft.world.inventory.CraftingMenu(102, player.getInventory(), net.minecraft.world.inventory.ContainerLevelAccess.create(level, new BlockPos(12, 80, 0))); player.containerMenu = menu;

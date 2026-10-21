@@ -11,6 +11,7 @@ public final class VerificationClient {
         Minecraft mc = Minecraft.getInstance();
         if (++ticks > 5000) { System.out.println("JGL_UI_FAIL timeout"); mc.stop(); return; }
         if (mc.player == null || mc.level == null) return;
+        if (Boolean.getBoolean("justgashloot.recipeVerification")) { VerificationJei.tick(mc); return; }
         mc.getToastManager().clear();
         mc.getTutorial().setStep(net.minecraft.client.tutorial.TutorialSteps.NONE);
         if (++wait < 30) return;

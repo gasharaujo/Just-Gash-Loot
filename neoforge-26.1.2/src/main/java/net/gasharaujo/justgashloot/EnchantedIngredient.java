@@ -21,7 +21,11 @@ public record EnchantedIngredient(Holder<Enchantment> enchantment) implements IC
         ItemEnchantments.Mutable data = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY); data.set(enchantment, 3);
         stack.set(DataComponents.STORED_ENCHANTMENTS, data.toImmutable()); return stack;
     }
-    @Override public java.util.stream.Stream<net.minecraft.core.Holder<Item>> items() { return net.minecraft.core.registries.BuiltInRegistries.ITEM.listElements().map(holder -> (net.minecraft.core.Holder<Item>) holder); }
+    @Override public java.util.stream.Stream<Holder<Item>> items() {
+        // Recipe indexes and modpack input filters inspect these candidates without enchantment data.
+        return java.util.stream.Stream.concat(java.util.stream.Stream.of(Items.ENCHANTED_BOOK.builtInRegistryHolder()),
+                enchantment.value().definition().supportedItems().stream()).distinct();
+    }
     @Override public net.minecraft.world.item.crafting.display.SlotDisplay display() { return new net.minecraft.world.item.crafting.display.SlotDisplay.ItemStackSlotDisplay(ItemStackTemplate.fromNonEmptyStack(example())); }
     @Override public boolean isSimple() { return false; }
     @Override public IngredientType<?> getType() { return TYPE.get(); }

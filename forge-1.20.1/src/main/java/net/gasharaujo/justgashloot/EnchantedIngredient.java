@@ -9,7 +9,7 @@ import net.minecraft.network.FriendlyByteBuf;
 public final class EnchantedIngredient extends AbstractIngredient {
     final Enchantment enchantment;
     EnchantedIngredient(Enchantment enchantment) {
-        super(Stream.empty());
+        super(Stream.of(new Ingredient.ItemValue(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, 3)))));
         if (enchantment != Enchantments.BLOCK_FORTUNE && enchantment != Enchantments.MOB_LOOTING) throw new IllegalArgumentException("Unsupported recipe enchantment");
         this.enchantment = enchantment;
     }

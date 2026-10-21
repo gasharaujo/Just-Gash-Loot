@@ -1,10 +1,10 @@
 {
-  "modVersion": "2.0.0",
+  "modVersion": "2.0.1",
   "passed": true,
   "artifacts": [
     {
-      "filename": "justgashloot-forge-1.20.1-2.0.0.jar",
-      "sha256": "33ea21b1df4575c15d098f29250af8c8bd9ec38c58c27efbdc2e03228be7b926",
+      "filename": "justgashloot-forge-1.20.1-2.0.1.jar",
+      "sha256": "e654f8822ef77add430db20acb3502be2843fc9a542e1575b8b2fb3d8cc7ae39",
       "installedInstance": "20.1",
       "classMajor": 61,
       "recipes": 24,
@@ -14,8 +14,8 @@
       "optionalModsNotBundled": true
     },
     {
-      "filename": "justgashloot-neoforge-1.21.1-2.0.0.jar",
-      "sha256": "1a2ca0dd1ffa99d53c0920dbd3c076c3df80e96300c3de884666d3375898d036",
+      "filename": "justgashloot-neoforge-1.21.1-2.0.1.jar",
+      "sha256": "3b0173a7963b434fc05b6c9ee5dda8a95dbd3a28be505ebff0aee1c9828bdac6",
       "installedInstance": "21",
       "classMajor": 65,
       "recipes": 24,
@@ -25,15 +25,18 @@
       "optionalModsNotBundled": true
     },
     {
-      "filename": "justgashloot-neoforge-26.1.2-2.0.0.jar",
-      "sha256": "94d9650aa801cb35d27098d346a598198c82f13ae55f9153e8728cb7ce16db8d",
+      "filename": "justgashloot-neoforge-26.1.2-2.0.1.jar",
+      "sha256": "45fa51fff0d5f8b8b8d2aceb397a06b05537d9653fc2f55953b36d0a91bfd7bb",
       "installedInstance": "26.1.2",
       "classMajor": 69,
       "recipes": 24,
       "recipeAdvancements": 24,
       "textures": 25,
       "verificationHarnessExcluded": true,
-      "optionalModsNotBundled": true
+      "optionalModsNotBundled": true,
+      "additionalInstalledInstances": [
+        "FTB Evolution 2"
+      ]
     }
   ]
 }

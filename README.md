@@ -1,6 +1,6 @@
 # Just Gash Loot
 
-Mod de Minecraft por **Gasharaujo**, versão **2.0.0**. **All Rights Reserved**.
+Mod de Minecraft por **Gasharaujo**, versão **2.0.1**. **All Rights Reserved**.
 
 O Loot Generator reproduz loot tables capturadas com o Loot Tablet, usando FE ou lava.
 Possui armazenamento de grandes contagens e upgrades de economia, velocidade, quantidade,
@@ -12,9 +12,9 @@ Instale o mesmo JAR no cliente e no servidor, escolhendo a versão correspondent
 
 | Minecraft | Loader de referência | Arquivo em `artifacts/` |
 | --- | --- | --- |
-| 1.20.1 | Forge 47.4.10 | `justgashloot-forge-1.20.1-2.0.0.jar` |
-| 1.21.1 | NeoForge 21.1.248 | `justgashloot-neoforge-1.21.1-2.0.0.jar` |
-| 26.1.2 | NeoForge 26.1.2.109 | `justgashloot-neoforge-26.1.2-2.0.0.jar` |
+| 1.20.1 | Forge 47.4.10 | `justgashloot-forge-1.20.1-2.0.1.jar` |
+| 1.21.1 | NeoForge 21.1.248 | `justgashloot-neoforge-1.21.1-2.0.1.jar` |
+| 26.1.2 | NeoForge 26.1.2.109 | `justgashloot-neoforge-26.1.2-2.0.1.jar` |
 
 Jade e Lootr são opcionais. Referências de integração, na mesma ordem:
 
@@ -181,7 +181,8 @@ O teste de cliente usa `-Pverification -PuiVerification runClient`, com um mundo
 paginação, seleção e configuração por pacotes reais. Comandos, classes e loot tables
 de verificação são excluídos dos JARs de distribuição.
 
-Resultados e limites estão em [docs/VALIDATION.md](docs/VALIDATION.md).
+A correção de receitas da 2.0.1 está em [docs/FIX-2.0.1.md](docs/FIX-2.0.1.md).
+Resultados da validação inicial e limites estão em [docs/VALIDATION.md](docs/VALIDATION.md).
 
 ![Loot Generator](docs/screenshots/neoforge-26.1.2-gui.png)
 

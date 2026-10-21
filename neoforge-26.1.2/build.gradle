@@ -71,3 +71,9 @@ if (project.hasProperty('verification')) {
 neoForge.runs.configureEach { systemProperty 'justgashloot.expectLibrary', project.hasProperty('expectLibrary') ? 'true' : 'false' }
 
 if (project.hasProperty('lootrJar')) { dependencies { runtimeOnly files(project.property('lootrJar')) } }
+
+if (project.hasProperty('jeiJar')) { dependencies { runtimeOnly files(project.property('jeiJar')) } }
+if (project.hasProperty('jeiConfigJar')) { dependencies { runtimeOnly files(project.property('jeiConfigJar')) } }
+if (project.hasProperty('recipeVerification')) { neoForge.runs.client.systemProperty 'justgashloot.recipeVerification', 'true' }
+
+if (project.hasProperty('kubejsJar')) { dependencies { runtimeOnly files(project.property('kubejsJar'), project.property('rhinoJar'), project.property('kubejsTooltipsJar')) } }

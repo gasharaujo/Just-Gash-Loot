@@ -21,9 +21,9 @@ function Find-Jdk([int]$Major) {
 }
 
 $matrix = @(
-    @{ Module = 'forge-1.20.1'; Java = 17; Instance = '20.1'; Jar = 'justgashloot-forge-1.20.1-2.0.0.jar' },
-    @{ Module = 'neoforge-1.21.1'; Java = 21; Instance = '21'; Jar = 'justgashloot-neoforge-1.21.1-2.0.0.jar' },
-    @{ Module = 'neoforge-26.1.2'; Java = 25; Instance = '26.1.2'; Jar = 'justgashloot-neoforge-26.1.2-2.0.0.jar' }
+    @{ Module = 'forge-1.20.1'; Java = 17; Instance = '20.1'; Jar = 'justgashloot-forge-1.20.1-2.0.1.jar' },
+    @{ Module = 'neoforge-1.21.1'; Java = 21; Instance = '21'; Jar = 'justgashloot-neoforge-1.21.1-2.0.1.jar' },
+    @{ Module = 'neoforge-26.1.2'; Java = 25; Instance = '26.1.2'; Jar = 'justgashloot-neoforge-26.1.2-2.0.1.jar' }
 )
 $originalJavaHome = $env:JAVA_HOME
 try {

@@ -77,4 +77,4 @@ Os três JARs 2.0.0 em `artifacts/` foram instalados nas instâncias CurseForge
 `20.1`, `21` e `26.1.2`; as cópias foram conferidas por SHA-256. Os arquivos de
 distribuição foram auditados quanto à versão, licença, receitas, texturas,
 ausência do harness e ausência de classes dos mods opcionais. A conferência está em
-[artifact-audit.json](../verification/results/artifact-audit.json).
+[artifact-audit-2.0.0.json](../verification/results/artifact-audit-2.0.0.json).
