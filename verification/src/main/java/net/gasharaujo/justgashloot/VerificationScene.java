@@ -8,6 +8,7 @@ import net.minecraft.world.item.Items;
 
 public final class VerificationScene {
     public static void commands(CommandDispatcher<CommandSourceStack> dispatcher) {
+        dispatcher.register(Commands.literal("jglvoidassert").executes(context -> VerificationVoid.assertClient(context.getSource().getPlayerOrException())));
         dispatcher.register(Commands.literal("jgluitest").executes(context -> {
             var player = context.getSource().getPlayerOrException();
             var level = (net.minecraft.server.level.ServerLevel) player.level();
@@ -16,6 +17,7 @@ public final class VerificationScene {
             player.getInventory().clearContent();
             var pos = player.blockPosition().offset(0, 0, -3);
             if (level.getBlockEntity(pos) instanceof LootEntity previous) {
+                previous.setVoidRules(java.util.List.of());
                 previous.outputs.clear(); previous.upgrades.clearContent(); previous.lava = previous.energy = 0;
             }
             level.setBlockAndUpdate(pos, ModContent.BLOCK.get().defaultBlockState());

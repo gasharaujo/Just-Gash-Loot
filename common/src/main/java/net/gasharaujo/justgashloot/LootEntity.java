@@ -53,6 +53,7 @@ public final class LootEntity extends VersionedEntity implements MenuProvider {
         if (level != null && Platform.clientSide(level)) throw new IllegalStateException("Server only");
         if (amount < 0) throw new IllegalArgumentException("Negative amount");
         if (template.isEmpty()) return amount;
+        if (FilterPlatform.matches(template, memory.voidRules)) return 0;
         long remaining = outputs.insert(template, amount);
         if (remaining != amount) setChanged();
         return remaining;
@@ -67,6 +68,8 @@ public final class LootEntity extends VersionedEntity implements MenuProvider {
         return result;
     }
     public String tableId() { return memory.table; }
+    public List<String> voidRules() { return List.copyOf(memory.voidRules); }
+    public void setVoidRules(List<String> rules) { memory.voidRules = VoidRules.restore(rules); setChanged(); }
     public String ownerName() { return memory.owner == null ? "" : memory.ownerName; }
     public void setTable(String id) {
         if (!LootRuntime.validId(id)) throw new IllegalArgumentException("Invalid loot table ID");
