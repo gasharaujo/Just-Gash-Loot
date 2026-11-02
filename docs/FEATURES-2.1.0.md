@@ -58,7 +58,7 @@ o diagnóstico da integração opcional.
 
 Relatórios: [Void Filter](../verification/results/void-filter-2.1.0.json),
 [SCC](../verification/results/scc-2.1.0.json) e
-[auditoria dos JARs](../verification/results/artifact-audit.json).
+[auditoria dos JARs](../verification/results/artifact-audit-2.1.0.json).
 
 | Versão | Tela do filtro |
 | --- | --- |

@@ -10,8 +10,8 @@ import net.minecraft.world.level.BlockGetter;
 /** Optional SCC adapter. SCC owns deposit priorities, filters, overflow policies and network state. */
 public final class SccBridge {
     private static volatile boolean enabled;
-    private static Class<?> nodeType;
-    private static Method network, conducts, online, insert, proxyCore;
+    private static Class<?> nodeType, transferType, busType;
+    private static Method network, conducts, online, insert, proxyCore, transferMode, transferFacing, transferManual, transferSide, busPart;
     private SccBridge() {}
     public static void initialize() {
         if (!Platform.sccLoaded()) return;
@@ -20,6 +20,10 @@ public final class SccBridge {
             Class<?> viewType = Class.forName("de.scc.calculator.network.NetworkView");
             network = nodeType.getMethod("network"); conducts = nodeType.getMethod("conducts");
             online = viewType.getMethod("online"); insert = viewType.getMethod("insert", ItemStack.class, boolean.class);
+            transferType = Class.forName("de.scc.calculator.network.TransferCalculatorBlockEntity");
+            transferMode = transferType.getMethod("mode"); transferFacing = transferType.getMethod("facing");
+            transferManual = transferType.getMethod("sidesManual", int.class); transferSide = transferType.getMethod("sideMode", int.class, Direction.class);
+            busType = Class.forName("de.scc.calculator.network.CableBusBlockEntity"); busPart = busType.getMethod("part", Direction.class);
             try { proxyCore = Class.forName("de.scc.calculator.network.NetworkProxy").getMethod("coreOf", BlockGetter.class, BlockPos.class); }
             catch (ReflectiveOperationException | LinkageError ignored) { proxyCore = null; }
             Class<?> linkType = Class.forName("de.scc.calculator.network.ForeignLinks$Link");
@@ -41,6 +45,21 @@ public final class SccBridge {
         }
     }
     public static boolean enabled() { return enabled; }
+    private static boolean receivesItems(Object node, BlockPos source) throws ReflectiveOperationException {
+        if (!transferType.isInstance(node)) return true;
+        Direction facing = (Direction) transferFacing.invoke(node);
+        if (!((net.minecraft.world.level.block.entity.BlockEntity) node).getBlockPos().relative(facing).equals(source)) return false;
+        // SCC item-side overrides take precedence over its general Import/Export mode.
+        if (Boolean.TRUE.equals(transferManual.invoke(node, 0))) {
+            for (Direction side : Direction.values()) {
+                int mode = ((Number) transferSide.invoke(node, 0, side)).intValue();
+                if (mode == 2 || mode == 3) return true; // Pull from machine, or both.
+            }
+            return false;
+        }
+        int mode = ((Number) transferMode.invoke(node)).intValue();
+        return mode == 0 || mode == 2; // SCC Import receives from the generator.
+    }
     private static List<Object> views(LootEntity machine) {
         if (!enabled || !(machine.getLevel() instanceof ServerLevel level)) return List.of();
         var seen = Collections.newSetFromMap(new IdentityHashMap<Object, Boolean>());
@@ -55,6 +74,8 @@ public final class SccBridge {
                     if (core instanceof BlockPos root && level.hasChunkAt(root)) node = level.getBlockEntity(root);
                 }
                 if (!nodeType.isInstance(node) || !Boolean.TRUE.equals(conducts.invoke(node))) continue;
+                Object endpoint = busType.isInstance(node) ? busPart.invoke(node, face.getOpposite()) : node;
+                if (endpoint != null && !receivesItems(endpoint, machine.getBlockPos())) continue;
                 Object view = network.invoke(node);
                 if (seen.add(view) && Boolean.TRUE.equals(online.invoke(view))) result.add(view);
             }

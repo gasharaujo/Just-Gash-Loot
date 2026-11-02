@@ -1,6 +1,6 @@
 # Just Gash Loot
 
-Mod de Minecraft por **Gasharaujo**, versão **2.1.0**. **All Rights Reserved**.
+Mod de Minecraft por **Gasharaujo**, versão **2.1.1**. **All Rights Reserved**.
 
 O Loot Generator reproduz loot tables capturadas com o Loot Tablet, usando FE ou lava.
 Possui armazenamento de grandes contagens e upgrades de economia, velocidade, quantidade,
@@ -12,9 +12,9 @@ Instale o mesmo JAR no cliente e no servidor, escolhendo a versão correspondent
 
 | Minecraft | Loader de referência | Arquivo em `artifacts/` |
 | --- | --- | --- |
-| 1.20.1 | Forge 47.4.10 | `justgashloot-forge-1.20.1-2.1.0.jar` |
-| 1.21.1 | NeoForge 21.1.248 | `justgashloot-neoforge-1.21.1-2.1.0.jar` |
-| 26.1.2 | NeoForge 26.1.2.109 | `justgashloot-neoforge-26.1.2-2.1.0.jar` |
+| 1.20.1 | Forge 47.4.10 | `justgashloot-forge-1.20.1-2.1.1.jar` |
+| 1.21.1 | NeoForge 21.1.248 | `justgashloot-neoforge-1.21.1-2.1.1.jar` |
+| 26.1.2 | NeoForge 26.1.2.109 | `justgashloot-neoforge-26.1.2-2.1.1.jar` |
 
 Jade e Lootr são opcionais. Referências de integração, na mesma ordem:
 
@@ -119,6 +119,14 @@ do próprio SCC. Itens recusados, sem espaço ou sem uma rede disponível ficam 
 armazenamento local, seguindo a capacidade existente. Os itens guardados são
 reenviados em lotes limitados quando a rede volta a aceitá-los.
 
+Quando a conexão usa um Transfer Calculator, o depósito automático respeita o
+recebimento de itens: ele precisa mirar o Loot Generator e permitir `Import` ou
+`Both`. Configurações manuais dos lados dos itens prevalecem sobre o modo geral.
+Se ele estiver apenas enviando, essa conexão não recolhe o loot automaticamente;
+o envio de lava e FE continua disponível. A regra também vale para o painel
+montado no cabo e acompanha as mudanças de estado sem botão ou reinício.
+Outras conexões diretas com a rede mantêm seu funcionamento.
+
 O mod funciona sem SCC. A integração não transforma o Loot Generator em uma
 ponte entre redes SCC separadas.
 
@@ -206,6 +214,7 @@ O teste de cliente usa `-Pverification -PuiVerification runClient`, com um mundo
 paginação, seleção e configuração por pacotes reais. Comandos, classes e loot tables
 de verificação são excluídos dos JARs de distribuição.
 
+A correção da 2.1.1 está em [docs/FIX-2.1.1.md](docs/FIX-2.1.1.md).
 As funcionalidades da 2.1.0 estão em [docs/FEATURES-2.1.0.md](docs/FEATURES-2.1.0.md).
 A correção anterior de receitas está em [docs/FIX-2.0.1.md](docs/FIX-2.0.1.md).
 Resultados da validação inicial e limites estão em [docs/VALIDATION.md](docs/VALIDATION.md).

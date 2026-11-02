@@ -75,10 +75,51 @@ final class VerificationScc {
             level.removeBlockEntity(cable); level.setBlockAndUpdate(cable, Blocks.AIR.defaultBlockState()); invalidate(level);
             machine.addGeneratedLoot(new ItemStack(Items.IRON_INGOT), 5);
             check(machine.count(0) == 5 && machine.template(0).is(Items.IRON_INGOT), "Disconnected SCC integration falls back to local storage");
+            transferDirections(level, machine, cable, controller, highPos, lowPos);
         } catch (Exception error) { throw new RuntimeException(error); }
         finally {
             for (BlockPos pos : positions) { level.removeBlockEntity(pos); level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState()); }
             level.getServer().getCommands().performPrefixedCommand(level.getServer().createCommandSourceStack(), "scc power on");
         }
+    }
+    private static void transferDirections(ServerLevel level, LootEntity machine, BlockPos transferPos, BlockPos controller, BlockPos highPos, BlockPos lowPos) throws Exception {
+        machine.outputs.clear();
+        for (BlockPos pos : List.of(highPos, lowPos)) { level.removeBlockEntity(pos); level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState()); }
+        Object storage = place(level, highPos, "item_storage");
+        var facing = net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
+        var transferBlock = BuiltInRegistries.BLOCK.getOptional(LootRuntime.id("scc:transfer_calculator")).orElseThrow();
+        level.setBlockAndUpdate(transferPos, transferBlock.defaultBlockState().setValue(facing, Direction.WEST));
+        Object transfer = level.getBlockEntity(transferPos);
+        call(transfer, "setMode", 1); call(transfer, "setEnergyMode", true); invalidate(level);
+        machine.addGeneratedLoot(new ItemStack(Items.DIAMOND), 5);
+        long revision = machine.outputs.revision(); SccBridge.flushNow(machine);
+        check(machine.count(0) == 5 && count(storage, Items.DIAMOND) == 0 && machine.outputs.revision() == revision, "Export-only SCC Transfer Calculator cannot receive generated or buffered loot automatically");
+        Object battery = place(level, lowPos, "energy_storage"); call(battery, "giveEnergy", 16000L, false); invalidate(level);
+        transfer.getClass().getMethod("serverTick", net.minecraft.world.level.Level.class, BlockPos.class, net.minecraft.world.level.block.state.BlockState.class, transfer.getClass()).invoke(null, level, transferPos, level.getBlockState(transferPos), transfer);
+        check(machine.energy > 0 && machine.count(0) == 5 && count(storage, Items.DIAMOND) == 0, "Export-only SCC Transfer Calculator still supplies FE without exporting the generator inventory");
+        call(transfer, "setMode", 0); SccBridge.flushNow(machine);
+        check(machine.count(0) == 0 && count(storage, Items.DIAMOND) == 5, "Changing Transfer Calculator to Import immediately enables buffered SCC deposits");
+        call(transfer, "setMode", 1); call(transfer, "setSideMode", 0, Direction.UP, 2);
+        machine.addGeneratedLoot(new ItemStack(Items.STONE), 3);
+        check(machine.count(0) == 0 && count(storage, Items.STONE) == 3, "SCC manual item-side Import overrides the general Export mode");
+        call(transfer, "setMode", 2); call(transfer, "sidesOff", 0);
+        machine.addGeneratedLoot(new ItemStack(Items.IRON_INGOT), 2); SccBridge.flushNow(machine);
+        check(machine.count(0) == 2 && count(storage, Items.IRON_INGOT) == 0, "Disabled manual item sides prevent SCC deposits even in Both mode");
+        call(transfer, "sidesAuto", 0); SccBridge.flushNow(machine);
+        check(machine.count(0) == 0 && count(storage, Items.IRON_INGOT) == 2, "Restoring automatic item sides enables Both-mode SCC deposits");
+        level.setBlockAndUpdate(transferPos, level.getBlockState(transferPos).setValue(facing, Direction.EAST));
+        machine.addGeneratedLoot(new ItemStack(Items.DIAMOND), 1);
+        check(machine.count(0) == 1 && count(storage, Items.DIAMOND) == 5, "A Transfer Calculator facing another target is not an automatic loot deposit route");
+        level.removeBlockEntity(transferPos); level.setBlockAndUpdate(transferPos, Blocks.AIR.defaultBlockState());
+        Object bus = place(level, transferPos, "cable_bus");
+        var cableProperty = (net.minecraft.world.level.block.state.properties.BooleanProperty) Class.forName("de.scc.calculator.network.CableBusBlock").getField("CABLE").get(null);
+        level.setBlockAndUpdate(transferPos, level.getBlockState(transferPos).setValue(cableProperty, true));
+        var panelState = BuiltInRegistries.BLOCK.getOptional(LootRuntime.id("scc:wall_transfer_calculator")).orElseThrow().defaultBlockState().setValue(facing, Direction.WEST);
+        Object panel = transfer.getClass().getConstructor(BlockPos.class, net.minecraft.world.level.block.state.BlockState.class).newInstance(transferPos, panelState);
+        call(bus, "addPart", Direction.WEST, panelState, panel); call(panel, "setMode", 1); invalidate(level);
+        SccBridge.flushNow(machine); machine.addGeneratedLoot(new ItemStack(Items.DIAMOND), 2);
+        check(machine.count(0) == 3 && count(storage, Items.DIAMOND) == 5, "Export-only cable-mounted Transfer Calculator blocks both automatic deposit paths");
+        call(panel, "setMode", 2); SccBridge.flushNow(machine);
+        check(machine.count(0) == 0 && count(storage, Items.DIAMOND) == 8, "Cable-mounted Transfer Calculator in Both mode permits deposits without a toggle or restart");
     }
 }
