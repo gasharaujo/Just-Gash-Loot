@@ -97,6 +97,17 @@ Se uma tabela desaparecer, a máquina pausa sem consumir. Erros de execução ta
 pausam a geração e ficam registrados no log; reaplicar a tabela ou recarregar seus
 dados permite tentar novamente. **Resultados que não couberem serão descartados.**
 
+## Void Filter
+
+O texto **Void**, no canto superior direito da GUI, abre o filtro da máquina.
+Digite um ID de item (`minecraft:rotten_flesh`) ou uma tag de itens
+(`#minecraft:planks`). As sugestões aparecem enquanto você digita; clique em uma
+ou use Tab para completar e **Adicionar** para salvar. Clique numa regra para removê-la.
+
+Cada máquina salva até 64 regras. Itens correspondentes são descartados durante
+a geração, antes de entrar no armazenamento. Itens que já estavam guardados
+permanecem disponíveis. As tags acompanham os dados carregados do mundo.
+
 ## Inventário e automação
 
 - 36 saídas em grade 9×4, exclusivamente para retirada.

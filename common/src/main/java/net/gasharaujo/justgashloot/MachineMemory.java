@@ -9,12 +9,14 @@ final class MachineMemory {
     String table = "", ownerName = "";
     UUID owner;
     GenerationCycle cycle = new GenerationCycle();
+    java.util.List<String> voidRules = new java.util.ArrayList<>();
     String encode() { return JSON.toJson(this); }
     static MachineMemory decode(String value) {
         if (value.isEmpty()) return new MachineMemory();
         try {
             MachineMemory result = JSON.fromJson(value, MachineMemory.class);
             if (result == null) return new MachineMemory();
+            result.voidRules = VoidRules.restore(result.voidRules);
             if (result.table == null || result.table.length() > 256 || !LootRuntime.validId(result.table)) result.table = "";
             if (result.ownerName == null || result.ownerName.length() > 16) result.ownerName = "";
             if (result.cycle == null) result.cycle = new GenerationCycle();

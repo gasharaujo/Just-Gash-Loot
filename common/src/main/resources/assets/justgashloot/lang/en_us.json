@@ -39,5 +39,14 @@
   "message.justgashloot.no_active": "Select a saved, available loot table with Shift + right click first.",
   "message.justgashloot.captured": "Saved and selected: %s",
   "message.justgashloot.configured": "Loot Generator configured: %s",
-  "message.justgashloot.unbound_player": "Reinstall the Player Upgrade to associate it with its installer."
+  "message.justgashloot.unbound_player": "Reinstall the Player Upgrade to associate it with its installer.",
+  "gui.justgashloot.void.title": "Void Filter",
+  "gui.justgashloot.void.input": "item ID or #tag",
+  "gui.justgashloot.void.add": "Add",
+  "gui.justgashloot.void.remove": "Click to remove",
+  "gui.justgashloot.void.help": "Discard matching drops before storage. Tab completes.",
+  "gui.justgashloot.void.rules": "Discard rules: %s / %s",
+  "gui.justgashloot.void.empty": "No items will be voided.",
+  "gui.justgashloot.void.unknown": "Unknown item or tag.",
+  "gui.justgashloot.void.limit": "Maximum of 64 rules."
 }

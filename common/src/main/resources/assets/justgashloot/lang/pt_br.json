@@ -39,5 +39,14 @@
   "message.justgashloot.no_active": "Selecione uma loot table salva e disponível com Shift + botão direito primeiro.",
   "message.justgashloot.captured": "Salva e selecionada: %s",
   "message.justgashloot.configured": "Loot Generator configurado: %s",
-  "message.justgashloot.unbound_player": "Reinstale o Player Upgrade para associá-lo ao jogador que o instalar."
+  "message.justgashloot.unbound_player": "Reinstale o Player Upgrade para associá-lo ao jogador que o instalar.",
+  "gui.justgashloot.void.title": "Filtro Void",
+  "gui.justgashloot.void.input": "ID de item ou #tag",
+  "gui.justgashloot.void.add": "Adicionar",
+  "gui.justgashloot.void.remove": "Clique para remover",
+  "gui.justgashloot.void.help": "Descarta drops antes de guardar. Tab completa.",
+  "gui.justgashloot.void.rules": "Regras de descarte: %s / %s",
+  "gui.justgashloot.void.empty": "Nenhum item sera descartado.",
+  "gui.justgashloot.void.unknown": "Item ou tag desconhecido.",
+  "gui.justgashloot.void.limit": "Limite de 64 regras."
 }

@@ -106,3 +106,5 @@ if (project.hasProperty('jeiJar')) {
     dependencies { runtimeOnly fg.deobf("local.jei:jei-1.20.1-forge:${project.property('jeiVersion')}") }
 }
 if (project.hasProperty('recipeVerification')) { minecraft.runs.client.property 'justgashloot.recipeVerification', 'true' }
+
+if (project.hasProperty('voidVerification')) { minecraft.runs.client.property 'justgashloot.voidVerification', 'true' }

@@ -15,6 +15,12 @@ public final class LootScreen extends AbstractContainerScreen<LootMenu> {
         imageWidth = LootMenu.WIDTH; imageHeight = LootMenu.HEIGHT;
         inventoryLabelY = 129;
     }
+    @Override protected void init() {
+        super.init();
+        Component label = Component.literal("Void").withStyle(net.minecraft.ChatFormatting.DARK_GRAY);
+        addRenderableWidget(new net.minecraft.client.gui.components.PlainTextButton(leftPos + imageWidth - 8 - font.width(label), topPos + 6, font.width(label), 10,
+                label, button -> FilterNetwork.request(new FilterAction(menu.containerId, 0, "", "")), font));
+    }
     @Override protected void renderBg(GuiGraphics graphics, float partial, int x, int y) { frame(graphics); }
     @Override public void render(GuiGraphics graphics, int x, int y, float partial) {
         renderBackground(graphics); super.render(graphics, x, y, partial); renderTooltip(graphics, x, y);

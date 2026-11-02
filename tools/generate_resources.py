@@ -135,6 +135,17 @@ def main():
         "message.justgashloot.configured": ("Loot Generator configured: %s", "Loot Generator configurado: %s"),
         "message.justgashloot.unbound_player": ("Reinstall the Player Upgrade to associate it with its installer.", "Reinstale o Player Upgrade para associá-lo ao jogador que o instalar."),
     }
+    translations.update({
+        "gui.justgashloot.void.title": ("Void Filter", "Filtro Void"),
+        "gui.justgashloot.void.input": ("item ID or #tag", "ID de item ou #tag"),
+        "gui.justgashloot.void.add": ("Add", "Adicionar"),
+        "gui.justgashloot.void.remove": ("Click to remove", "Clique para remover"),
+        "gui.justgashloot.void.help": ("Discard matching drops before storage. Tab completes.", "Descarta drops antes de guardar. Tab completa."),
+        "gui.justgashloot.void.rules": ("Discard rules: %s / %s", "Regras de descarte: %s / %s"),
+        "gui.justgashloot.void.empty": ("No items will be voided.", "Nenhum item sera descartado."),
+        "gui.justgashloot.void.unknown": ("Unknown item or tag.", "Item ou tag desconhecido."),
+        "gui.justgashloot.void.limit": ("Maximum of 64 rules.", "Limite de 64 regras."),
+    })
     for key, (english, portuguese) in translations.items():
         en[key] = english
         pt[key] = portuguese
