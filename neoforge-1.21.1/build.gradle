@@ -73,3 +73,5 @@ neoForge.runs.configureEach { systemProperty 'justgashloot.expectLibrary', proje
 if (project.hasProperty('lootrJar')) { dependencies { runtimeOnly files(project.property('lootrJar')) } }
 
 if (project.hasProperty('voidVerification')) { neoForge.runs.client.systemProperty 'justgashloot.voidVerification', 'true' }
+
+if (project.hasProperty('sccJar')) { dependencies { runtimeOnly files(project.property('sccJar')) } }

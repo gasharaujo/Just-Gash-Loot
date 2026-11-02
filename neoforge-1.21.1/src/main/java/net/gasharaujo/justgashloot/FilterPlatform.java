@@ -17,7 +17,8 @@ public final class FilterPlatform {
         String text = query.strip().toLowerCase(Locale.ROOT);
         java.util.stream.Stream<String> values = text.startsWith("#") ? net.minecraft.core.registries.BuiltInRegistries.ITEM.getTagNames().map(tag -> "#" + tag.location())
                 : BuiltInRegistries.ITEM.keySet().stream().map(Object::toString);
-        return values.filter(value -> value.contains(text)).sorted().limit(8).toList();
+        String match = text.startsWith("#") ? text.substring(1) : text;
+        return values.filter(value -> value.contains(match)).sorted().limit(8).toList();
     }
     public static boolean exists(String rule) {
         return rule.startsWith("#") ? net.minecraft.core.registries.BuiltInRegistries.ITEM.getTagNames().anyMatch(tag -> ("#" + tag.location()).equals(rule))

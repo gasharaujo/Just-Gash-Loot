@@ -17,7 +17,7 @@ final class VerificationVoid {
         var copy = VerificationMod.roundTrip(machine);
         VerificationChecks.check(copy.voidRules().equals(machine.voidRules()) && copy.count(0) == 10, "Void rules persist with native block data while preserving existing stock");
         VerificationChecks.check(MachineMemory.decode("{\"table\":\"\",\"cycle\":{}}").voidRules.isEmpty(), "Older machines migrate to an empty Void Filter");
-        VerificationChecks.check(FilterPlatform.suggestions("minecraft:diamond").contains("minecraft:diamond") && FilterPlatform.suggestions("#minecraft:planks").contains("#minecraft:planks"), "Server autocomplete provides real item IDs and item tags");
+        VerificationChecks.check(FilterPlatform.suggestions("minecraft:diamond").contains("minecraft:diamond") && FilterPlatform.suggestions("#minecraft:planks").contains("#minecraft:planks") && FilterPlatform.suggestions("#planks").contains("#minecraft:planks"), "Server autocomplete provides real item IDs and item tags");
         VerificationChecks.check(!FilterPlatform.exists("minecraft:not_a_real_jgl_item") && !FilterPlatform.exists("#minecraft:not_a_real_jgl_tag"), "Void configuration refuses unknown items and tags");
         var installer = VerificationMod.player(level, "JglVoid"); installer.setPos(30.5, 80.5, .5);
         var menu = new LootMenu(79, installer.getInventory(), machine); installer.containerMenu = menu;

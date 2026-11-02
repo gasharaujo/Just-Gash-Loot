@@ -8,4 +8,5 @@ public final class Platform {
     public static boolean sameItem(ItemStack a, ItemStack b) { return ItemStack.isSameItemSameComponents(a, b); }
     public static boolean clientSide(Level level) { return level.isClientSide(); }
     public static void open(Player player, LootEntity machine) { if (player instanceof ServerPlayer server) server.openMenu(machine, machine.getBlockPos()); }
+    public static boolean sccLoaded() { return net.neoforged.fml.ModList.get().isLoaded("scc"); }
 }
