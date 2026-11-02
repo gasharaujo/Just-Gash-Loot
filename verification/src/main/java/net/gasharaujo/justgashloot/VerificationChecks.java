@@ -25,7 +25,7 @@ public final class VerificationChecks {
     }
     public static void run(MinecraftServer server) {
         Throwable failure = null;
-        try { VerificationV2Checks.run(server); VerificationVoid.run(server.overworld()); checks(server); }
+        try { VerificationV2Checks.run(server); VerificationVoid.run(server.overworld()); VerificationScc.run(server.overworld()); checks(server); }
         catch (Throwable error) { failure = error; error.printStackTrace(); }
         try {
             StringBuilder report = new StringBuilder("{\n  \"passed\": " + (failure == null) + ",\n  \"checks\": [");

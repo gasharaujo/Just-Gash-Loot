@@ -79,3 +79,5 @@ if (project.hasProperty('recipeVerification')) { neoForge.runs.client.systemProp
 if (project.hasProperty('kubejsJar')) { dependencies { runtimeOnly files(project.property('kubejsJar'), project.property('rhinoJar'), project.property('kubejsTooltipsJar')) } }
 
 if (project.hasProperty('voidVerification')) { neoForge.runs.client.systemProperty 'justgashloot.voidVerification', 'true' }
+
+if (project.hasProperty('sccJar')) { dependencies { runtimeOnly files(project.property('sccJar')) } }

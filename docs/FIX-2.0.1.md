@@ -50,7 +50,7 @@ níveis II e IV são recusados, e ingredientes encantados preservam sua validaç
 sincronização. Os testes incluem regressões de armazenamento, geração, Jade e Lootr.
 
 Relatório: [recipe-fix-2.0.1.json](../verification/results/recipe-fix-2.0.1.json).
-Auditoria dos JARs: [artifact-audit.json](../verification/results/artifact-audit.json).
+Auditoria dos JARs: [artifact-audit-2.0.1.json](../verification/results/artifact-audit-2.0.1.json).
 
 | Versão | Quantity | Quality |
 | --- | --- | --- |

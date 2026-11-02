@@ -54,6 +54,11 @@ public final class LootEntity extends VersionedEntity implements MenuProvider {
         if (amount < 0) throw new IllegalArgumentException("Negative amount");
         if (template.isEmpty()) return amount;
         if (FilterPlatform.matches(template, memory.voidRules)) return 0;
+        if (amount > 0 && SccBridge.enabled()) {
+            int offered = (int) Math.min(amount, 4096);
+            ItemStack remaining = SccBridge.deposit(this, template.copyWithCount(offered));
+            amount -= offered - remaining.getCount();
+        }
         long remaining = outputs.insert(template, amount);
         if (remaining != amount) setChanged();
         return remaining;
@@ -102,7 +107,10 @@ public final class LootEntity extends VersionedEntity implements MenuProvider {
         return simulatedPlayer;
     }
     public void serverTick() {
-        if (!(level instanceof net.minecraft.server.level.ServerLevel server) || memory.table.isEmpty()) return;
+        if (!(level instanceof net.minecraft.server.level.ServerLevel server)) return;
+        try { SccBridge.flush(this); }
+        catch (RuntimeException error) { super.setChanged(); return; }
+        if (memory.table.isEmpty()) return;
         var table = LootRuntime.resolve(server, memory.table);
         if (table == null || table == failedTable) return;
         boolean playerUpgrade = !upgrades.getItem(4).isEmpty();
