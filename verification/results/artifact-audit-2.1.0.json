@@ -1,0 +1,43 @@
+{
+  "modVersion": "2.1.0",
+  "passed": true,
+  "artifacts": [
+    {
+      "filename": "justgashloot-forge-1.20.1-2.1.0.jar",
+      "sha256": "c626ef2273653a28f0cfbdfa5e290dc7d95cb1af2a995c057907d0b0ecffdf2f",
+      "installedInstance": "20.1",
+      "classMajor": 61,
+      "recipes": 24,
+      "recipeAdvancements": 24,
+      "textures": 25,
+      "verificationHarnessExcluded": true,
+      "optionalModsNotBundled": true
+    },
+    {
+      "filename": "justgashloot-neoforge-1.21.1-2.1.0.jar",
+      "sha256": "f72053146bd433cebbde38dcfbad2b18f963bdeb67ba3f0af584b20be340fb80",
+      "installedInstance": "21",
+      "classMajor": 65,
+      "recipes": 24,
+      "recipeAdvancements": 24,
+      "textures": 25,
+      "verificationHarnessExcluded": true,
+      "optionalModsNotBundled": true
+    },
+    {
+      "filename": "justgashloot-neoforge-26.1.2-2.1.0.jar",
+      "sha256": "530a9d3fce93c17d6a356622a5cd633f7236ab3ad6da9ad6907c35442f54d739",
+      "installedInstance": "26.1.2",
+      "classMajor": 69,
+      "recipes": 24,
+      "recipeAdvancements": 24,
+      "textures": 25,
+      "verificationHarnessExcluded": true,
+      "optionalModsNotBundled": true
+    }
+  ],
+  "manualInstallation": {
+    "instance": "FTB Evolution 2",
+    "filename": "justgashloot-neoforge-26.1.2-2.1.0.jar"
+  }
+}
